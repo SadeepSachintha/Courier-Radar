@@ -11,9 +11,11 @@ graph TD
     Simulator[Python Telemetry Simulator] -->|Raw GPS coordinates| Kafka[Apache Kafka Broker]
     Kafka -->|gps-telemetry stream| Spark[Apache Spark Streaming]
     Spark -->|Calculate speed/bearing, validate, geofencing| Laravel[Laravel 12 API]
+    subgraph Shared Network Namespace
+        Laravel -->|Broadcast event via localhost| Reverb[Laravel Reverb WS]
+    end
     Laravel -->|Update latest status| Redis[(Redis Hot Cache)]
     Laravel -->|Insert coordinate history| PostGIS[(PostgreSQL + PostGIS)]
-    Laravel -->|Broadcast event| Reverb[Laravel Reverb WS]
     Reverb -->|WebSocket Push| Vue[Vue 3 Frontend]
 ```
 
@@ -32,7 +34,7 @@ graph TD
 | --- | --- | --- | --- |
 | **Vue 3 Frontend** | `5173` | `5173` | Interactive dashboard UI |
 | **Laravel API Backend** | `8000` | `8005` | Telemetry handler endpoint |
-| **Laravel Reverb WS** | `8080` | `8090` | WebSocket broker daemon |
+| **Laravel Reverb WS** | `8080` (shared network) | `8090` (exposed via backend) | WebSocket broker daemon |
 | **PostgreSQL + PostGIS** | `5432` | `5432` | Persistent database storage |
 | **Redis Cache** | `6379` | `6379` | In-memory latest state cache |
 | **Apache Kafka** | `29092` | `9092` | Decoupled message broker |
@@ -55,7 +57,7 @@ graph TD
    *Note: This builds and configures all 8 container environments automatically. The initial launch may take a few minutes as base images are fetched and extensions compile.*
 
 2. **Execute Database Migrations**:
-   Once the containers are up, trigger Laravel's PostGIS migrations to initialize tables and spatial indices:
+   Once the containers are running, trigger Laravel's PostGIS migrations to initialize tables and spatial indices:
    ```bash
    docker compose exec backend php artisan migrate
    ```
