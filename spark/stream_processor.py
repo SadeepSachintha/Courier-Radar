@@ -107,7 +107,7 @@ def process_batch(df, batch_id):
         }
 
         try:
-            res = requests.post(LARAVEL_API, json=payload, timeout=2)
+            res = requests.post(LARAVEL_API, json=payload, timeout=10)
             print(f"Processed: {vehicle_id} | Speed: {payload['speed']} km/h | Bearing: {payload['bearing']}° | Status: {payload['status']} | Laravel: {res.status_code}")
         except Exception as e:
             print(f"Failed to post telemetry to Laravel: {e}", file=sys.stderr)
