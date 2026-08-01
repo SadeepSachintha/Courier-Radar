@@ -32,8 +32,8 @@ export const useFleetStore = defineStore('fleet', {
         broadcaster: 'reverb',
         key: 'courierkey',
         wsHost: window.location.hostname,
-        wsPort: 8080,
-        wssPort: 8080,
+        wsPort: 8090,
+        wssPort: 8090,
         forceTLS: false,
         enabledTransports: ['ws', 'wss'],
         disableStats: true

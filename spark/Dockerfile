@@ -1,17 +1,17 @@
 FROM python:3.11-slim
 
-# Install OpenJDK 17 and other utilities
+# Install OpenJDK 21 and other utilities
 RUN apt-get update && \
     mkdir -p /usr/share/man/man1 && \
     apt-get install -y --no-install-recommends \
-        openjdk-17-jre-headless \
+        openjdk-21-jre-headless \
         procps \
         curl \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 
 WORKDIR /app
 
